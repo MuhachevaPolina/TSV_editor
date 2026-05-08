@@ -3,9 +3,13 @@
 #include <vector>
 #include <string>
 
+// headers.size == row.size
+
 class TSVTable
 {
 public:
+  // TSVTable();
+
   std::string getCellData(int rowNum, int columnNum) const;
   std::vector<std::string> getRowData(int rowNum) const;
   std::vector<std::string> getColumnData(int columnNum) const;
@@ -20,6 +24,14 @@ public:
   std::string getHeaderData(int columnNum) const;
   void setHeaderData(int columnNum, std::string headerData);
 
+  int rowCount() const;
+  int columnCount() const;
+
+  void addRow();
+  void addColumn(const std::string header);
+
+  void debugOutput();
+  
 private:
   std::vector<std::vector<std::string>> m_tableData;
   std::vector<std::string> m_headers;

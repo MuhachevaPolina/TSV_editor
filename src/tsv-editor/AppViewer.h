@@ -10,7 +10,7 @@ class AppViewer: public QWidget
 {
   Q_OBJECT
 public:
-  AppViewer(QObject* parent = nullptr);
+  AppViewer(QWidget* parent = nullptr);
 private:
   QLabel *m_statusLabel;
   QPushButton *m_quitButton;

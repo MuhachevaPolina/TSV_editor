@@ -6,7 +6,7 @@ class TSVTableView: public QTableView
 {
   Q_OBJECT
 public:
-  TSVTableView(QObject *parent = nullptr);
+  TSVTableView(QWidget *parent = nullptr);
 private:
 
 };
