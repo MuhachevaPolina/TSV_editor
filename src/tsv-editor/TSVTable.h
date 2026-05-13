@@ -8,7 +8,8 @@
 class TSVTable
 {
 public:
-  // TSVTable();
+  TSVTable();
+  TSVTable(int rowNum, int columnNum);
 
   std::string getCellData(int rowNum, int columnNum) const;
   std::vector<std::string> getRowData(int rowNum) const;
@@ -27,11 +28,11 @@ public:
   int rowCount() const;
   int columnCount() const;
 
-  void addRow();
-  void addColumn(const std::string header);
+  void addRow(int rowNum);
+  void addColumn(const std::string header, int columnNum);
 
   void debugOutput();
-  
+
 private:
   std::vector<std::vector<std::string>> m_tableData;
   std::vector<std::string> m_headers;
