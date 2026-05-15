@@ -3,6 +3,7 @@
 #include <src/tsv-editor/TSVTable.h>
 
 #include <QAbstractTableModel>
+#include <QVariant>
 
 class TSVTableModel: public QAbstractTableModel
 {

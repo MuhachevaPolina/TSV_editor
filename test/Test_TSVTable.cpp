@@ -4,6 +4,7 @@
 
 #include <gtest/gtest.h>
 
+//add tests for wrong indexes and for wrong row/column lengthes and think some more
 
 TEST(TSVTableTests, EmptyTableRowsCount)
 {
@@ -129,5 +130,22 @@ TEST(TSVTableTests, AddColumn)
   table->addColumn("new header for 5th", 4);
   EXPECT_TRUE(table->columnCount() == 5);
   EXPECT_TRUE(table->getCellData(0, 4).empty());
-  //EXPECT_EQ(table->getHeaderData(4), "new header for 5th");
+  EXPECT_EQ(table->getHeaderData(4), "new header for 5th");
+}
+
+TEST(TSVTableTests, WrongIdxForAddRow)
+{
+  TSVTable* table = utilities::makeTestTable();
+
+  table->addRow(5);
+  EXPECT_EQ(table->getCellData(4, 0), "wrong idx");
+}
+
+TEST(TSVTableTests, WrongIdxForAddColumn)
+{
+  TSVTable* table = utilities::makeTestTable();
+
+  table->addColumn("new header", 5);
+  EXPECT_EQ(table->getCellData(0, 4), "wrong idx");
+  EXPECT_EQ(table->getHeaderData(4), "wrong idx");
 }
