@@ -7,6 +7,9 @@ class TSVTableView: public QTableView
   Q_OBJECT
 public:
   TSVTableView(QWidget *parent = nullptr);
-private:
 
+  int selectedRow() const;
+  int selectedColumn() const;
+private:
+  void setTableView();
 };
