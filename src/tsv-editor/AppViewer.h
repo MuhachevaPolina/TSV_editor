@@ -5,6 +5,8 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPushButton>
+#include <QTableView>
+#include <QVBoxLayout>
 
 class AppViewer: public QWidget
 {
@@ -13,6 +15,10 @@ public:
   AppViewer(QWidget* parent = nullptr);
 private:
   QLabel *m_statusLabel;
+
   QPushButton *m_quitButton;
-  TSVTableView m_tableViewer;
+  QPushButton* m_addRowButton;
+
+  QVBoxLayout* layout;
+  TSVTableView* m_tableViewer;
 };

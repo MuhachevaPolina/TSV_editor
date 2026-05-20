@@ -1,5 +1,8 @@
 add_library(TSVEditor STATIC
     TSVTable.cpp
+    TSVTableView.cpp
+    TSVTableModel.cpp
+    AppViewer.cpp
 )
 
 target_include_directories(TSVEditor PUBLIC

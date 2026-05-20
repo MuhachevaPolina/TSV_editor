@@ -2,6 +2,9 @@
 
 #include <QString>
 
+TSVTableModel::TSVTableModel(QObject *parent)
+{}
+
 int TSVTableModel::rowCount(const QModelIndex &parent) const
 {
   return this->m_table.rowCount();
@@ -26,7 +29,6 @@ QVariant TSVTableModel::data(const QModelIndex &index, int role) const
     if(row < this->m_table.rowCount() && column < this->m_table.columnCount())
     {
       QString answer = QString::fromStdString(this->m_table.getCellData(row, column));
-  // look how to make answer to my situation
       return QVariant(answer);
     }
   }
@@ -68,7 +70,6 @@ bool TSVTableModel::setData(const QModelIndex &index, const QVariant &value, int
   }
 
   return false;
-  // should do dataChanged signal
 }
 
 Qt::ItemFlags TSVTableModel::flags(const QModelIndex& index) const

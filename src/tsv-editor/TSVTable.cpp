@@ -1,6 +1,5 @@
-// #include <src/tsv-editor/TSVTable.h>
+#include <src/tsv-editor/TSVTable.h>
 
-#include "TSVTable.h"
 #include <iostream>
 
 TSVTable::TSVTable() 

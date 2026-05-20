@@ -1,11 +1,11 @@
 #include <src/tsv-editor/TSVTableView.h>
 
-TSVTableView::TSVTableView(QWidget *parent)
+TSVTableView::TSVTableView(TSVTableModel* model, QWidget *parent)
 {
-  setTableView();
+  this->setTableView(model);
 }
 
-void TSVTableView::setTableView()
+void TSVTableView::setTableView(TSVTableModel* model)
 {
-  
+  this->setModel(model);
 }

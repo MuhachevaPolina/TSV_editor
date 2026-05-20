@@ -18,12 +18,6 @@ find_package(GTest REQUIRED)
 
 include_directories(${CMAKE_SOURCE_DIR})
 add_subdirectory(src/tsv-editor)
-# add_subdirectory(src/server)
-# add_subdirectory(src/client)
-# add_subdirectory(test)
-# add_subdirectory(test/client)
-
-# enable_testing()
 
 add_library(test_utils STATIC
     test/testUtilities.cpp
@@ -43,17 +37,13 @@ add_executable(tests
     test/Test_TSVTable.cpp
 )
 
-# add_executable(app
-#     src/main.cpp
-# )
-
 target_include_directories(tests PUBLIC
     ${CMAKE_SOURCE_DIR}
 )
 
-# add_executable(main
-#     src/main.cpp
-# )
+add_executable(app
+    src/main.cpp
+)
 
 target_link_libraries(tests PRIVATE
     TSVEditor
@@ -65,12 +55,12 @@ target_link_libraries(tests PRIVATE
     Qt5::Network
 )
 
-# target_link_libraries(app PRIVATE
-
-#     Qt5::Core
-#     Qt5::Widgets
-#     Qt5::Network
-# )
+target_link_libraries(app PRIVATE
+    TSVEditor
+    Qt5::Core
+    Qt5::Widgets
+    Qt5::Network
+)
 
 
 include(GoogleTest)

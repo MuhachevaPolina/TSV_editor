@@ -1,15 +1,17 @@
 #pragma once 
 
+#include <src/tsv-editor/TSVTableModel.h>
+
 #include <QTableView>
 
 class TSVTableView: public QTableView
 {
   Q_OBJECT
 public:
-  TSVTableView(QWidget *parent = nullptr);
+  TSVTableView(TSVTableModel* model, QWidget *parent = nullptr);
 
   int selectedRow() const;
   int selectedColumn() const;
 private:
-  void setTableView();
+  void setTableView(TSVTableModel* model);
 };
