@@ -83,3 +83,45 @@ Qt::ItemFlags TSVTableModel::flags(const QModelIndex& index) const
   return Qt::NoItemFlags;
 }
 
+bool TSVTableModel::insertRows(int row, int count, const QModelIndex& parent)
+{
+  this->beginInsertRows(parent, row, row + count - 1);
+  for(int i = 0; i < count; ++i)
+  {
+    this->m_table.addRow(row + i);
+  }
+  this->endInsertRows();
+  return true;
+}
+
+bool TSVTableModel::insertColumns(int column, int count, const QModelIndex& parent)
+{
+  this->beginInsertRows(parent, column, column + count - 1);
+  for(int i = 0; i < count; ++i)
+  {
+    this->m_table.addColumn("some header", column + i);
+  }
+  this->endInsertColumns();
+  return true;
+}
+
+bool TSVTableModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant& value, int role)
+{
+  if(role != Qt::EditRole)
+  {
+    return false;
+  }
+
+  if(orientation == Qt::Horizontal)
+  {
+    if(section < 0 || section >= this->m_table.columnCount())
+    {
+      return false;
+    }
+    this->m_table.setHeaderData(section, value.toString().toStdString());
+    emit headerDataChanged(orientation, section, section);
+    return true;
+  }
+
+  return false;
+}
