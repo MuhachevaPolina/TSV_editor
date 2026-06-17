@@ -76,9 +76,9 @@ Qt::ItemFlags TSVTableModel::flags(const QModelIndex& index) const
 {
   int row = index.row();
   int column = index.column();
-  if(row < this->m_table.rowCount() && column < this->m_table.columnCount())
+  if(index.isValid())
   {
-    return Qt::ItemIsEditable;
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
   }
   return Qt::NoItemFlags;
 }
@@ -96,7 +96,7 @@ bool TSVTableModel::insertRows(int row, int count, const QModelIndex& parent)
 
 bool TSVTableModel::insertColumns(int column, int count, const QModelIndex& parent)
 {
-  this->beginInsertRows(parent, column, column + count - 1);
+  this->beginInsertColumns(parent, column, column + count - 1);
   for(int i = 0; i < count; ++i)
   {
     this->m_table.addColumn("some header", column + i);

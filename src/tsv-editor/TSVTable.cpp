@@ -42,14 +42,13 @@ std::vector<std::string> TSVTable::getRowData(int rowNum) const
   return this->m_tableData[rowNum];
 }
 
-// look again
 std::vector<std::string> TSVTable::getColumnData(int columnNum) const
 {
   std::vector<std::string> column(this->rowCount());
 
   for (int i = 0; i < this->rowCount(); ++i)
   {
-    column[i] = this->m_tableData[i][columnNum]; // how is this copying?
+    column[i] = this->m_tableData[i][columnNum];
   }
 
   return column;
@@ -68,7 +67,7 @@ void TSVTable::setRowData(int rowNum, std::vector<std::string> rowData)
 {
   if (this->rowCount() > rowNum)
   {
-    this->m_tableData[rowNum] = rowData; // how is this copying?
+    this->m_tableData[rowNum] = rowData;
   }
 }
 

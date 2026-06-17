@@ -12,5 +12,3 @@ public:
 private:
   TSVFilesHandler m_filesHandler;
 };
-
-// is for files operations

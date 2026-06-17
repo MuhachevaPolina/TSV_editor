@@ -3,6 +3,7 @@
 #include <src/tsv-editor/TSVTableModel.h>
 
 #include <QTableView>
+#include <QSortFilterProxyModel>
 
 class TSVTableView: public QTableView
 {
@@ -13,5 +14,7 @@ public:
   int selectedRow() const;
   int selectedColumn() const;
 private:
-  void setTableView(TSVTableModel* model);
+  void setTableView(QAbstractItemModel* model);
+
+  QSortFilterProxyModel* m_sortModel;
 };
