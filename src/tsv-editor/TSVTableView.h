@@ -1,9 +1,9 @@
 #pragma once 
 
 #include <src/tsv-editor/TSVTableModel.h>
+#include <src/tsv-editor/TSVSortFilterProxyModel.h>
 
 #include <QTableView>
-#include <QSortFilterProxyModel>
 
 class TSVTableView: public QTableView
 {
@@ -16,5 +16,5 @@ public:
 private:
   void setTableView(QAbstractItemModel* model);
 
-  QSortFilterProxyModel* m_sortModel;
+  TSVSortFilterProxyModel* m_sortModel;
 };
