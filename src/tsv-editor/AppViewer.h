@@ -17,6 +17,7 @@ public:
 private slots:
   void addRow();
   void addColumn();
+  void deleteColumn(int colNum);
   void headerDoubleClicked(int idx);
 
 private:
@@ -25,6 +26,8 @@ private:
   QPushButton *m_quitButton;
   QPushButton* m_addRowButton;
   QPushButton* m_addColumnButton;
+  QPushButton* m_deleteColumnButton;
+  QPushButton* m_deleteRowButton;
 
   QHBoxLayout* m_horizLayout;
   QVBoxLayout* layout;

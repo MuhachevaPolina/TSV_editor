@@ -3,7 +3,8 @@
 #include <QString>
 
 TSVTableModel::TSVTableModel(QObject *parent)
-{}
+{
+}
 
 int TSVTableModel::rowCount(const QModelIndex &parent) const
 {
@@ -17,7 +18,7 @@ int TSVTableModel::columnCount(const QModelIndex &parent) const
 
 QVariant TSVTableModel::data(const QModelIndex &index, int role) const
 {
-  if(!index.isValid())
+  if (!index.isValid())
   {
     return QVariant();
   }
@@ -26,7 +27,7 @@ QVariant TSVTableModel::data(const QModelIndex &index, int role) const
   int column = index.column();
   if (role == Qt::DisplayRole || role == Qt::EditRole)
   {
-    if(row < this->m_table.rowCount() && column < this->m_table.columnCount())
+    if (row < this->m_table.rowCount() && column < this->m_table.columnCount())
     {
       QString answer = QString::fromStdString(this->m_table.getCellData(row, column));
       return QVariant(answer);
@@ -35,16 +36,16 @@ QVariant TSVTableModel::data(const QModelIndex &index, int role) const
   return QVariant();
 }
 
-QVariant TSVTableModel::headerData(int section, Qt::Orientation orientation, int role) const 
+QVariant TSVTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
   if (role == Qt::DisplayRole)
   {
-    if(orientation == Qt::Horizontal)
+    if (orientation == Qt::Horizontal)
     {
       QString answer = QString::fromStdString(this->m_table.getHeaderData(section));
       return QVariant(answer);
     }
-    if(orientation == Qt::Vertical)
+    if (orientation == Qt::Vertical)
     {
       QString answer = QString::fromStdString(std::to_string(section));
       return QVariant(answer);
@@ -57,7 +58,7 @@ bool TSVTableModel::setData(const QModelIndex &index, const QVariant &value, int
 {
   int row = index.row();
   int column = index.column();
-  if(!index.isValid() || row >= this->m_table.rowCount() || column >= this->m_table.columnCount())
+  if (!index.isValid() || row >= this->m_table.rowCount() || column >= this->m_table.columnCount())
   {
     return false;
   }
@@ -72,21 +73,21 @@ bool TSVTableModel::setData(const QModelIndex &index, const QVariant &value, int
   return false;
 }
 
-Qt::ItemFlags TSVTableModel::flags(const QModelIndex& index) const
+Qt::ItemFlags TSVTableModel::flags(const QModelIndex &index) const
 {
   int row = index.row();
   int column = index.column();
-  if(index.isValid())
+  if (index.isValid())
   {
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
   }
   return Qt::NoItemFlags;
 }
 
-bool TSVTableModel::insertRows(int row, int count, const QModelIndex& parent)
+bool TSVTableModel::insertRows(int row, int count, const QModelIndex &parent)
 {
   this->beginInsertRows(parent, row, row + count - 1);
-  for(int i = 0; i < count; ++i)
+  for (int i = 0; i < count; ++i)
   {
     this->m_table.addRow(row + i);
   }
@@ -94,10 +95,10 @@ bool TSVTableModel::insertRows(int row, int count, const QModelIndex& parent)
   return true;
 }
 
-bool TSVTableModel::insertColumns(int column, int count, const QModelIndex& parent)
+bool TSVTableModel::insertColumns(int column, int count, const QModelIndex &parent) // BAD WORKING
 {
   this->beginInsertColumns(parent, column, column + count - 1);
-  for(int i = 0; i < count; ++i)
+  for (int i = 0; i < count; ++i)
   {
     this->m_table.addColumn("some header", column + i);
   }
@@ -105,16 +106,16 @@ bool TSVTableModel::insertColumns(int column, int count, const QModelIndex& pare
   return true;
 }
 
-bool TSVTableModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant& value, int role)
+bool TSVTableModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
 {
-  if(role != Qt::EditRole)
+  if (role != Qt::EditRole)
   {
     return false;
   }
 
-  if(orientation == Qt::Horizontal)
+  if (orientation == Qt::Horizontal)
   {
-    if(section < 0 || section >= this->m_table.columnCount())
+    if (section < 0 || section >= this->m_table.columnCount())
     {
       return false;
     }
@@ -124,4 +125,18 @@ bool TSVTableModel::setHeaderData(int section, Qt::Orientation orientation, cons
   }
 
   return false;
+}
+
+bool TSVTableModel::removeColumns(int column, int count, const QModelIndex &parent) // BAD WORKING
+{
+  this->beginRemoveColumns(parent, column, column + count - 1);
+
+  for (int i = 0; i < count; ++i)
+  {
+    this->m_table.deleteColumn(i);
+  }
+
+  this->endRemoveColumns();
+  
+  return true;
 }

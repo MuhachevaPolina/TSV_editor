@@ -17,4 +17,5 @@ private:
   void setTableView(QAbstractItemModel* model);
 
   TSVSortFilterProxyModel* m_sortModel;
+  TSVTableModel* m_tableModel;
 };
