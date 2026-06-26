@@ -4,6 +4,7 @@ add_library(TSVEditor STATIC
     TSVTableModel.cpp
     AppViewer.cpp
     TSVSortFilterProxyModel.cpp
+    TSVFilesHandler.cpp
 )
 
 target_include_directories(TSVEditor PUBLIC

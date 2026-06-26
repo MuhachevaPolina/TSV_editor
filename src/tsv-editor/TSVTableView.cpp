@@ -16,3 +16,32 @@ void TSVTableView::setTableView(QAbstractItemModel* model)
 {
   this->setModel(model);
 }
+
+int TSVTableView::selectedRow() const
+{
+  QModelIndex idx = this->currentIndex();
+
+  if(!idx.isValid())
+  {
+    return -1;
+  }
+
+  return this->m_sortModel->mapToSource(idx).row();
+}
+
+int TSVTableView::selectedColumn() const
+{
+  QModelIndex idx = this->currentIndex();
+
+  if(!idx.isValid())
+  {
+    return -1;
+  }
+
+  return this->m_sortModel->mapToSource(idx).column();
+}
+
+TSVTableModel* TSVTableView::getTableModel()
+{
+  return this->m_tableModel;
+}

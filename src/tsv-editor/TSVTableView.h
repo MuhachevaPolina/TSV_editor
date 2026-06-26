@@ -13,6 +13,8 @@ public:
 
   int selectedRow() const;
   int selectedColumn() const;
+
+  TSVTableModel* getTableModel();
 private:
   void setTableView(QAbstractItemModel* model);
 

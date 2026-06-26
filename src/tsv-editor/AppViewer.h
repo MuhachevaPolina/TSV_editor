@@ -1,6 +1,7 @@
 #pragma once
 
 #include <src/tsv-editor/TSVTableView.h>
+#include <src/tsv-editor/TSVFilesHandler.h>
 
 #include <QWidget>
 #include <QLabel>
@@ -17,8 +18,11 @@ public:
 private slots:
   void addRow();
   void addColumn();
-  void deleteColumn(int colNum);
+  void deleteColumn();
+  void deleteRow();
   void headerDoubleClicked(int idx);
+  void openFile();
+  void saveFile();
 
 private:
   QLabel *m_statusLabel;
@@ -28,8 +32,12 @@ private:
   QPushButton* m_addColumnButton;
   QPushButton* m_deleteColumnButton;
   QPushButton* m_deleteRowButton;
+  QPushButton* m_openFileButton;
+  QPushButton* m_saveFileButton;
 
   QHBoxLayout* m_horizLayout;
+  QHBoxLayout* m_tmpUpperHorizLayout;
   QVBoxLayout* layout;
   TSVTableView* m_tableViewer;
+  TSVFilesHandler m_filesHandler;
 };

@@ -12,6 +12,9 @@ class TSVTableModel: public QAbstractTableModel
 public:
   TSVTableModel(QObject *parent = nullptr);
 
+  const TSVTable& getTable() const;
+  void setTable(TSVTable& table);
+
   int rowCount(const QModelIndex &parent = QModelIndex()) const override;
   int columnCount(const QModelIndex &parent = QModelIndex()) const override;
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
@@ -22,6 +25,7 @@ public:
   bool insertColumns(int column, int count, const QModelIndex& parent = QModelIndex()) override;
   bool setHeaderData(int section, Qt::Orientation, const QVariant& value, int role = Qt::EditRole) override;
   bool removeColumns(int column, int count = 1, const QModelIndex &parent = QModelIndex()) override;
+  bool removeRows(int row, int count = 1, const QModelIndex& parent = QModelIndex()) override;
 // private slots:
 
 private:

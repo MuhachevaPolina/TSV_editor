@@ -1,96 +1,125 @@
 // #include <src/tsv-editor/TSVFilesHandler.h>
 #include "TSVFilesHandler.h"
 
-#include <iostream>
-#include <sstream>
+#include <QFile>
+#include <QDebug>
+#include <QTextStream>
+#include <QStringList>
 
-TSVFilesHandler::TSVFilesHandler(std::string tableFilesDirName) : m_tableFilesDirName(tableFilesDirName)
+#include <vector>
+
+TSVFilesHandler::TSVFilesHandler()
 {
 }
 
-void TSVFilesHandler::open(std::string fileName)
+bool TSVFilesHandler::read(QString fileName, TSVTable &table)
 {
-  this->m_openedFiles[fileName] = std::make_shared<std::fstream>(this->m_tableFilesDirName + "/" + fileName, std::ios::in | std::ios::out | std::ios::app);
-  /*
-  std::string line;
-  std::getline(*this->m_openedFiles[fileName], line);
-  std::cout << line << std::endl;
-  */
-}
+  QFile file(fileName);
 
-void TSVFilesHandler::close(std::string fileName)
-{
-  auto it = this->m_openedFiles.find(fileName);
-
-  if (it != this->m_openedFiles.end())
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    if (it->second && it->second->is_open())
+    qDebug() << "can't open file for reading: " << fileName << file.errorString();
+    return false;
+  }
+
+  QTextStream stream(&file);
+  stream.setCodec("UTF-8");
+
+  if (stream.atEnd())
+  {
+    qDebug() << "can't read because file is empty";
+    return false;
+  }
+
+  QString headerLine = stream.readLine();
+  QStringList headersList = headerLine.split('\t', Qt::KeepEmptyParts);
+
+  if (headersList.isEmpty())
+  {
+    qDebug() << "no headers";
+    return false;
+  }
+
+  std::vector<QStringList> rows;
+  QString line;
+  QStringList rowCells;
+
+  while (!stream.atEnd())
+  {
+    line = stream.readLine();
+    rowCells = line.split('\t', Qt::KeepEmptyParts);
+    if (rowCells.size() > headersList.size())
     {
-      it->second->close();
+      qDebug() << "too many cells";
     }
 
-    this->m_openedFiles.erase(it);
+    rows.push_back(rowCells);
   }
+
+  int rowCount = rowCells.size();
+  int columnCount = headersList.size();
+
+  if (rowCount == 0)
+  {
+    rowCount = 1;
+  }
+
+  TSVTable newTable(rowCount, columnCount);
+
+  for (int column = 0; column < columnCount; column++)
+  {
+    newTable.setHeaderData(column, headersList[column].toStdString());
+  }
+
+  for (int row = 0; row < rowCount; row++)
+  {
+    for (int column = 0; column < columnCount; column++)
+    {
+      newTable.setCellData(row, column, rows[row][column].toStdString());
+    }
+  }
+
+  table = newTable;
+  return true;
 }
 
-void TSVFilesHandler::read(std::string fileName)
+bool TSVFilesHandler::write(QString fileName, const TSVTable &table)
 {
-  std::string line;
+  QFile file(fileName);
 
-  std::getline(*this->m_openedFiles[fileName], line);
-  std::stringstream headersStream(line);
-
-  std::string cell;
-  char delim = '\t';
-
-  while (std::getline(headersStream, cell, delim))
+  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    this->m_headers.push_back(cell);
+    qDebug() << "can't open file for reading: " << fileName << file.errorString();
+    return false;
   }
 
-  int curLineNum = 0;
-  int headersNum = this->m_headers.size();
-  std::stringstream lineStream;
-  std::vector<std::string> emptyLine;
-  while (std::getline(*this->m_openedFiles[fileName], line))
+  QTextStream stream(&file);
+  stream.setCodec("UTF-8");
+
+  for (int column = 0; column < table.columnCount(); column++)
   {
-    this->m_curReadenFileCells.push_back(emptyLine);
-    lineStream.clear();
-    lineStream.str(line);
-    while (std::getline(lineStream, cell, delim))
+    if (column != 0)
     {
-      if (this->m_curReadenFileCells[curLineNum].size() < headersNum)
+      stream << '\t';
+    }
+
+    stream << QString::fromStdString(table.getHeaderData(column));
+  }
+
+  stream << '\n';
+
+  for (int row = 0; row < table.rowCount(); row++)
+  {
+    for (int column = 0; column < table.columnCount(); column++)
+    {
+      if (column != 0)
       {
-        this->m_curReadenFileCells[curLineNum].push_back(cell);
+        stream << '\t';
       }
-      else
-      {
-        std::cerr << "too many cells" << std::endl;
-      }
+
+      stream << QString::fromStdString(table.getCellData(row, column));
     }
-
-    curLineNum++;
+    stream << '\n';
   }
-
-  for (std::vector<std::string> i : this->m_curReadenFileCells)
-  {
-    for (std::string j : i)
-    {
-      std::cout << "cur cell: " << j << '\t';
-    }
-    std::cout << std::endl;
-  }
-}
-
-void TSVFilesHandler::write(std::string fileName, std::vector<std::string> fileLines)
-{
-  for (auto line : fileLines)
-  {
-    this->writeLine(fileName, line);
-  }
-}
-
-void TSVFilesHandler::writeLine(std::string fileName, std::string line)
-{
-  *this->m_openedFiles[fileName] << line << "\n";
+  return true;
 }

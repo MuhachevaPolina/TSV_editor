@@ -95,7 +95,7 @@ bool TSVTableModel::insertRows(int row, int count, const QModelIndex &parent)
   return true;
 }
 
-bool TSVTableModel::insertColumns(int column, int count, const QModelIndex &parent) // BAD WORKING
+bool TSVTableModel::insertColumns(int column, int count, const QModelIndex &parent)
 {
   this->beginInsertColumns(parent, column, column + count - 1);
   for (int i = 0; i < count; ++i)
@@ -127,16 +127,44 @@ bool TSVTableModel::setHeaderData(int section, Qt::Orientation orientation, cons
   return false;
 }
 
-bool TSVTableModel::removeColumns(int column, int count, const QModelIndex &parent) // BAD WORKING
+bool TSVTableModel::removeColumns(int column, int count, const QModelIndex &parent)
 {
   this->beginRemoveColumns(parent, column, column + count - 1);
 
   for (int i = 0; i < count; ++i)
   {
-    this->m_table.deleteColumn(i);
+    this->m_table.deleteColumn(column);
   }
 
   this->endRemoveColumns();
   
   return true;
+}
+
+bool TSVTableModel::removeRows(int row, int count, const QModelIndex& parent)
+{
+  this->beginRemoveRows(parent, row, row + count - 1);
+
+  for (int i = 0; i < count; ++i)
+  {
+    this->m_table.deleteRow(row);
+  }
+
+  this->endRemoveRows();
+  
+  return true;
+}
+
+const TSVTable& TSVTableModel::getTable() const
+{
+  return this->m_table;
+}
+
+void TSVTableModel::setTable(TSVTable& table)
+{
+  this->beginResetModel();
+
+  this->m_table = table;
+
+  this->endResetModel();
 }
