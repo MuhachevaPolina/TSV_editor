@@ -144,43 +144,33 @@ void AppViewer::headerDoubleClicked(int idx)
 
 void AppViewer::deleteColumn()
 {
-  int totalColumns = this->m_tableViewer->model()->columnCount();
+  int column = this->m_tableViewer->selectedColumn();
 
-  if (totalColumns == 0)
+  if (column < 0)
   {
-    QMessageBox::warning(this, "error", "no columns");
+    QMessageBox::warning(this, "error", "no column selected");
     return;
   }
 
-  bool ok;
-  int columnNum = QInputDialog::getInt(this, tr("Удаление столбца"), tr("Введите номер столбца (от 1 до %1):").arg(totalColumns),
-                                       1, 1, totalColumns, 1, &ok);
-
-  if (ok)
+  if (this->m_tableViewer->getTableModel()->removeColumn(column))
   {
-    int columnIndex = columnNum - 1;
-    this->m_tableViewer->model()->removeColumn(columnIndex);
+    this->m_statusLabel->setText("column deleted");
   }
 }
 
 void AppViewer::deleteRow()
 {
-  int totalRow = this->m_tableViewer->model()->rowCount();
+  int row = this->m_tableViewer->selectedRow();
 
-  if (totalRow == 0)
+  if (row < 0)
   {
-    QMessageBox::warning(this, "error", "no Row");
+    QMessageBox::warning(this, "error", "no row selected");
     return;
   }
 
-  bool ok;
-  int rowNum = QInputDialog::getInt(this, tr("Удаление строки"), tr("Введите номер строки (от 1 до %1):").arg(totalRow),
-                                    1, 1, totalRow, 1, &ok);
-
-  if (ok)
+  if (this->m_tableViewer->getTableModel()->removeRow(row))
   {
-    int rowIndex = rowNum - 1;
-    this->m_tableViewer->model()->removeRow(rowIndex);
+    this->m_statusLabel->setText("row deleted");
   }
 }
 
