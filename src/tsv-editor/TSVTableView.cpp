@@ -45,3 +45,18 @@ TSVTableModel* TSVTableView::getTableModel()
 {
   return this->m_tableModel;
 }
+
+void TSVTableView::mousePressEvent(QMouseEvent* event)
+{
+  QModelIndex idx = this->indexAt(event->pos());
+
+  if(!idx.isValid())
+  {
+    this->clearSelection();
+    this->setCurrentIndex(QModelIndex());
+    event->accept();
+    return;
+  }
+
+  QTableView::mousePressEvent(event);
+}

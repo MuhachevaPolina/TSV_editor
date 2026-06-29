@@ -23,6 +23,7 @@ private slots:
   void headerDoubleClicked(int idx);
   void openFile();
   void saveFile();
+  void updateDeleteButtons();
 
 private:
   QLabel *m_statusLabel;

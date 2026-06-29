@@ -4,6 +4,7 @@
 #include <src/tsv-editor/TSVSortFilterProxyModel.h>
 
 #include <QTableView>
+#include <QMouseEvent>
 
 class TSVTableView: public QTableView
 {
@@ -15,6 +16,10 @@ public:
   int selectedColumn() const;
 
   TSVTableModel* getTableModel();
+
+protected:
+  void mousePressEvent(QMouseEvent* event) override;
+
 private:
   void setTableView(QAbstractItemModel* model);
 

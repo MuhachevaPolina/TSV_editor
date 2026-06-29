@@ -10,6 +10,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QLineEdit>
+#include <QItemSelectionModel>
 
 AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
 {
@@ -17,18 +18,25 @@ AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
   this->m_quitButton = new QPushButton("exit", this);
   this->m_addRowButton = new QPushButton("add Row", this);
   this->m_addColumnButton = new QPushButton("add Column", this);
+
   this->m_deleteColumnButton = new QPushButton("delete Column", this);
   this->m_deleteRowButton = new QPushButton("delete Row", this);
+  this->m_deleteRowButton->setEnabled(false);
+  this->m_deleteColumnButton->setEnabled(false);
+
   this->m_openFileButton = new QPushButton("open a file", this);
   this->m_saveFileButton = new QPushButton("save file as...", this);
+
   this->m_horizLayout = new QHBoxLayout;
   this->m_horizLayout->addWidget(this->m_addRowButton);
   this->m_horizLayout->addWidget(this->m_addColumnButton);
   this->m_horizLayout->addWidget(this->m_deleteColumnButton);
   this->m_horizLayout->addWidget(this->m_deleteRowButton);
+
   this->m_tmpUpperHorizLayout = new QHBoxLayout;
   this->m_tmpUpperHorizLayout->addWidget(this->m_openFileButton);
   this->m_tmpUpperHorizLayout->addWidget(this->m_saveFileButton);
+
   this->resize(1200, 800);
 
   this->layout = new QVBoxLayout;
@@ -80,6 +88,8 @@ AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
   connect(deleteRowAction, &QAction::triggered, this, &AppViewer::deleteRow);
   connect(addColumnAction, &QAction::triggered, this, &AppViewer::addColumn);
   connect(deleteColumnAction, &QAction::triggered, this, &AppViewer::deleteColumn);
+
+  connect(this->m_tableViewer->selectionModel(), &QItemSelectionModel::currentChanged, this, &AppViewer::updateDeleteButtons);
 }
 
 void AppViewer::addRow()
@@ -155,6 +165,7 @@ void AppViewer::deleteColumn()
   if (this->m_tableViewer->getTableModel()->removeColumn(column))
   {
     this->m_statusLabel->setText("column deleted");
+    this->updateDeleteButtons();
   }
 }
 
@@ -171,6 +182,7 @@ void AppViewer::deleteRow()
   if (this->m_tableViewer->getTableModel()->removeRow(row))
   {
     this->m_statusLabel->setText("row deleted");
+    this->updateDeleteButtons();
   }
 }
 
@@ -213,4 +225,13 @@ void AppViewer::saveFile()
   {
     this->m_statusLabel->setText("file saving: error");
   }
+}
+
+void AppViewer::updateDeleteButtons()
+{
+  bool hasSelectedRow = this->m_tableViewer->selectedRow() >= 0;
+  bool hasSelectedColumn = this->m_tableViewer->selectedColumn() >= 0;
+
+  this->m_deleteRowButton->setEnabled(hasSelectedRow);
+  this->m_deleteColumnButton->setEnabled(hasSelectedColumn);
 }
