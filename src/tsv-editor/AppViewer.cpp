@@ -9,6 +9,7 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QAction>
+#include <QLineEdit>
 
 AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
 {
@@ -41,6 +42,14 @@ AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
   fileMenu->addSeparator();
   QAction *exitAction = fileMenu->addAction("exit");
 
+  QMenu *editMenu = menuBar->addMenu("change");
+
+  QAction *addRowAction = editMenu->addAction("add row");
+  QAction *deleteRowAction = editMenu->addAction("delete row");
+  editMenu->addSeparator();
+  QAction *addColumnAction = editMenu->addAction("add column");
+  QAction *deleteColumnAction = editMenu->addAction("delete column");
+
   this->m_tableViewer = new TSVTableView(new TSVTableModel);
 
   this->layout->addWidget(menuBar);
@@ -66,26 +75,59 @@ AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
   connect(openAction, &QAction::triggered, this, &AppViewer::openFile);
   connect(saveAction, &QAction::triggered, this, &AppViewer::saveFile);
   connect(exitAction, &QAction::triggered, this, &AppViewer::close);
+
+  connect(addRowAction, &QAction::triggered, this, &AppViewer::addRow);
+  connect(deleteRowAction, &QAction::triggered, this, &AppViewer::deleteRow);
+  connect(addColumnAction, &QAction::triggered, this, &AppViewer::addColumn);
+  connect(deleteColumnAction, &QAction::triggered, this, &AppViewer::deleteColumn);
 }
 
 void AppViewer::addRow()
 {
   int row = this->m_tableViewer->model()->rowCount();
 
-  this->m_tableViewer->model()->insertRow(row);
+  if (this->m_tableViewer->model()->insertRow(row))
+  {
+    QModelIndex newIndex = this->m_tableViewer->model()->index(row, 0);
 
-  this->m_statusLabel->setText("row added");
+    this->m_tableViewer->scrollTo(newIndex, QAbstractItemView::PositionAtBottom);
+    this->m_tableViewer->setCurrentIndex(newIndex);
+
+    this->m_statusLabel->setText("row added");
+  }
 }
 
 void AppViewer::addColumn()
 {
+  bool isRight = false;
+
+  QString header = QInputDialog::getText(
+      this,
+      "add column",
+      "new header",
+      QLineEdit::Normal,
+      "some header",
+      &isRight);
+
+  if (!isRight || header.isEmpty())
+  {
+    return;
+  }
+
   int column = this->m_tableViewer->model()->columnCount();
 
-  this->m_tableViewer->model()->insertColumn(column);
+  if (this->m_tableViewer->model()->insertColumn(column))
+  {
+    this->m_tableViewer->model()->setHeaderData(column, Qt::Horizontal, header);
 
-  this->m_statusLabel->setText("column added");
+    QModelIndex newIndex = this->m_tableViewer->model()->index(0, column);
+
+    this->m_tableViewer->scrollTo(newIndex, QAbstractItemView::PositionAtCenter);
+    this->m_tableViewer->setCurrentIndex(newIndex);
+
+    this->m_statusLabel->setText("column added");
+  }
 }
-
 void AppViewer::headerDoubleClicked(int idx)
 {
   QAbstractItemModel *model = this->m_tableViewer->model();
