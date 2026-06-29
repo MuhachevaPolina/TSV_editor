@@ -48,9 +48,11 @@ bool TSVFilesHandler::read(QString fileName, TSVTable &table)
   {
     line = stream.readLine();
     rowCells = line.split('\t', Qt::KeepEmptyParts);
+
     if (rowCells.size() > headersList.size())
     {
       qDebug() << "too many cells";
+      return false;
     }
 
     rows.push_back(rowCells);
@@ -75,7 +77,14 @@ bool TSVFilesHandler::read(QString fileName, TSVTable &table)
   {
     for (int column = 0; column < columnCount; column++)
     {
-      newTable.setCellData(row, column, rows[row][column].toStdString());
+      if (column < rows[row].size())
+      {
+        newTable.setCellData(row, column, rows[row][column].toStdString());
+      }
+      else
+      {
+        newTable.setCellData(row, column, "");
+      }
     }
   }
 
