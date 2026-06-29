@@ -6,6 +6,9 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
 
 AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
 {
@@ -28,8 +31,19 @@ AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
   this->resize(1200, 800);
 
   this->layout = new QVBoxLayout;
+
+  QMenuBar *menuBar = new QMenuBar(this);
+
+  QMenu *fileMenu = menuBar->addMenu("file");
+
+  QAction *openAction = fileMenu->addAction("open");
+  QAction *saveAction = fileMenu->addAction("save as ..");
+  fileMenu->addSeparator();
+  QAction *exitAction = fileMenu->addAction("exit");
+
   this->m_tableViewer = new TSVTableView(new TSVTableModel);
 
+  this->layout->addWidget(menuBar);
   this->layout->addLayout(this->m_tmpUpperHorizLayout);
   this->layout->addWidget(this->m_statusLabel);
   this->layout->addLayout(this->m_horizLayout);
@@ -48,6 +62,10 @@ AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
 
   connect(this->m_openFileButton, &QPushButton::clicked, this, &AppViewer::openFile);
   connect(this->m_saveFileButton, &QPushButton::clicked, this, &AppViewer::saveFile);
+
+  connect(openAction, &QAction::triggered, this, &AppViewer::openFile);
+  connect(saveAction, &QAction::triggered, this, &AppViewer::saveFile);
+  connect(exitAction, &QAction::triggered, this, &AppViewer::close);
 }
 
 void AppViewer::addRow()
@@ -75,7 +93,7 @@ void AppViewer::headerDoubleClicked(int idx)
   bool isRight = false;
   QString newHeader = QInputDialog::getText(this, "change header", "new header", QLineEdit::Normal, oldHeader, &isRight);
 
-  if(isRight && !newHeader.isEmpty())
+  if (isRight && !newHeader.isEmpty())
   {
     model->setHeaderData(idx, Qt::Horizontal, newHeader);
     this->m_statusLabel->setText("header changed");
@@ -86,7 +104,7 @@ void AppViewer::deleteColumn()
 {
   int totalColumns = this->m_tableViewer->model()->columnCount();
 
-  if(totalColumns == 0)
+  if (totalColumns == 0)
   {
     QMessageBox::warning(this, "error", "no columns");
     return;
@@ -96,7 +114,7 @@ void AppViewer::deleteColumn()
   int columnNum = QInputDialog::getInt(this, tr("Удаление столбца"), tr("Введите номер столбца (от 1 до %1):").arg(totalColumns),
                                        1, 1, totalColumns, 1, &ok);
 
-  if(ok)
+  if (ok)
   {
     int columnIndex = columnNum - 1;
     this->m_tableViewer->model()->removeColumn(columnIndex);
@@ -107,7 +125,7 @@ void AppViewer::deleteRow()
 {
   int totalRow = this->m_tableViewer->model()->rowCount();
 
-  if(totalRow == 0)
+  if (totalRow == 0)
   {
     QMessageBox::warning(this, "error", "no Row");
     return;
@@ -115,9 +133,9 @@ void AppViewer::deleteRow()
 
   bool ok;
   int rowNum = QInputDialog::getInt(this, tr("Удаление строки"), tr("Введите номер строки (от 1 до %1):").arg(totalRow),
-                                       1, 1, totalRow, 1, &ok);
+                                    1, 1, totalRow, 1, &ok);
 
-  if(ok)
+  if (ok)
   {
     int rowIndex = rowNum - 1;
     this->m_tableViewer->model()->removeRow(rowIndex);
@@ -128,14 +146,14 @@ void AppViewer::openFile()
 {
   QString fileName = QFileDialog::getOpenFileName(this, "open tsv-file", QString(), "tsv-files (*.tsv);;all files(*)");
 
-  if(fileName.isEmpty())
+  if (fileName.isEmpty())
   {
     return;
   }
 
   TSVTable table;
 
-  if(this->m_filesHandler.read(fileName, table))
+  if (this->m_filesHandler.read(fileName, table))
   {
     this->m_tableViewer->getTableModel()->setTable(table);
     this->m_statusLabel->setText("file opening: success");
@@ -150,12 +168,12 @@ void AppViewer::saveFile()
 {
   QString fileName = QFileDialog::getSaveFileName(this, "save tsv-file", QString(), "tsv-files (*.tsv);;all files(*)");
 
-  if(fileName.isEmpty())
+  if (fileName.isEmpty())
   {
     return;
   }
 
-  if(this->m_filesHandler.write(fileName, this->m_tableViewer->getTableModel()->getTable()))
+  if (this->m_filesHandler.write(fileName, this->m_tableViewer->getTableModel()->getTable()))
   {
     this->m_statusLabel->setText("file saving: success");
   }
