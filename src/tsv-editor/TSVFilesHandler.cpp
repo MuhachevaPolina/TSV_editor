@@ -1,5 +1,5 @@
-// #include <src/tsv-editor/TSVFilesHandler.h>
-#include "TSVFilesHandler.h"
+#include <src/tsv-editor/TSVFilesHandler.h>
+// #include "TSVFilesHandler.h"
 
 #include <QFile>
 #include <QDebug>
@@ -56,7 +56,7 @@ bool TSVFilesHandler::read(QString fileName, TSVTable &table)
     rows.push_back(rowCells);
   }
 
-  int rowCount = rowCells.size();
+  int rowCount = rows.size();
   int columnCount = headersList.size();
 
   if (rowCount == 0)
@@ -87,7 +87,7 @@ bool TSVFilesHandler::write(QString fileName, const TSVTable &table)
 {
   QFile file(fileName);
 
-  if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
   {
     qDebug() << "can't open file for reading: " << fileName << file.errorString();
     return false;

@@ -12,7 +12,6 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5 REQUIRED COMPONENTS Core)
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt5 REQUIRED COMPONENTS Network)
 
 find_package(GTest REQUIRED)
 
@@ -30,7 +29,6 @@ target_include_directories(test_utils PUBLIC
 target_link_libraries(test_utils PUBLIC
     Qt5::Core
     Qt5::Widgets
-    Qt5::Network
 )
 
 add_executable(tests
@@ -52,14 +50,12 @@ target_link_libraries(tests PRIVATE
     GTest::gtest
     Qt5::Core
     Qt5::Widgets
-    Qt5::Network
 )
 
 target_link_libraries(app PRIVATE
     TSVEditor
     Qt5::Core
     Qt5::Widgets
-    Qt5::Network
 )
 
 

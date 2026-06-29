@@ -5,3 +5,4 @@ CMakeLists.txt.user
 draft.cpp
 file.txt
 run
+*.tsv

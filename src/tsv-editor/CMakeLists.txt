@@ -13,5 +13,4 @@ target_include_directories(TSVEditor PUBLIC
 target_link_libraries(TSVEditor PRIVATE
     Qt5::Core
     Qt5::Widgets
-    Qt5::Network
 )
