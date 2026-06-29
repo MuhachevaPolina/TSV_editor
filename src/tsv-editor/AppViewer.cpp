@@ -53,10 +53,13 @@ AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
   QMenu *editMenu = menuBar->addMenu("change");
 
   QAction *addRowAction = editMenu->addAction("add row");
-  QAction *deleteRowAction = editMenu->addAction("delete row");
+  this->m_deleteRowAction = editMenu->addAction("delete row");
   editMenu->addSeparator();
   QAction *addColumnAction = editMenu->addAction("add column");
-  QAction *deleteColumnAction = editMenu->addAction("delete column");
+  this->m_deleteColumnAction = editMenu->addAction("delete column");
+
+  this->m_deleteRowAction->setEnabled(false);
+  this->m_deleteColumnAction->setEnabled(false);
 
   this->m_tableViewer = new TSVTableView(new TSVTableModel);
 
@@ -85,9 +88,9 @@ AppViewer::AppViewer(QWidget *parent) : QWidget(parent)
   connect(exitAction, &QAction::triggered, this, &AppViewer::close);
 
   connect(addRowAction, &QAction::triggered, this, &AppViewer::addRow);
-  connect(deleteRowAction, &QAction::triggered, this, &AppViewer::deleteRow);
+  connect(this->m_deleteRowAction, &QAction::triggered, this, &AppViewer::deleteRow);
   connect(addColumnAction, &QAction::triggered, this, &AppViewer::addColumn);
-  connect(deleteColumnAction, &QAction::triggered, this, &AppViewer::deleteColumn);
+  connect(this->m_deleteColumnAction, &QAction::triggered, this, &AppViewer::deleteColumn);
 
   connect(this->m_tableViewer->selectionModel(), &QItemSelectionModel::currentChanged, this, &AppViewer::updateDeleteButtons);
 }
@@ -234,4 +237,7 @@ void AppViewer::updateDeleteButtons()
 
   this->m_deleteRowButton->setEnabled(hasSelectedRow);
   this->m_deleteColumnButton->setEnabled(hasSelectedColumn);
+
+  this->m_deleteRowAction->setEnabled(hasSelectedRow);
+  this->m_deleteColumnAction->setEnabled(hasSelectedColumn);
 }

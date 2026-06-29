@@ -8,12 +8,13 @@
 #include <QPushButton>
 #include <QTableView>
 #include <QVBoxLayout>
+#include <QAction>
 
-class AppViewer: public QWidget
+class AppViewer : public QWidget
 {
   Q_OBJECT
 public:
-  AppViewer(QWidget* parent = nullptr);
+  AppViewer(QWidget *parent = nullptr);
 
 private slots:
   void addRow();
@@ -29,16 +30,19 @@ private:
   QLabel *m_statusLabel;
 
   QPushButton *m_quitButton;
-  QPushButton* m_addRowButton;
-  QPushButton* m_addColumnButton;
-  QPushButton* m_deleteColumnButton;
-  QPushButton* m_deleteRowButton;
-  QPushButton* m_openFileButton;
-  QPushButton* m_saveFileButton;
+  QPushButton *m_addRowButton;
+  QPushButton *m_addColumnButton;
+  QPushButton *m_deleteColumnButton;
+  QPushButton *m_deleteRowButton;
+  QPushButton *m_openFileButton;
+  QPushButton *m_saveFileButton;
 
-  QHBoxLayout* m_horizLayout;
-  QHBoxLayout* m_tmpUpperHorizLayout;
-  QVBoxLayout* layout;
-  TSVTableView* m_tableViewer;
+  QAction *m_deleteRowAction;
+  QAction *m_deleteColumnAction;
+
+  QHBoxLayout *m_horizLayout;
+  QHBoxLayout *m_tmpUpperHorizLayout;
+  QVBoxLayout *layout;
+  TSVTableView *m_tableViewer;
   TSVFilesHandler m_filesHandler;
 };
