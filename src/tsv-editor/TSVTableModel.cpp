@@ -127,31 +127,39 @@ bool TSVTableModel::setHeaderData(int section, Qt::Orientation orientation, cons
   return false;
 }
 
-bool TSVTableModel::removeColumns(int column, int count, const QModelIndex &parent)
+bool TSVTableModel::removeColumns(int column, int count, const QModelIndex& parent)
 {
+  if(parent.isValid() || count <= 0 || column < 0 || column + count > this->columnCount())
+  {
+    return false;
+  }
+
   this->beginRemoveColumns(parent, column, column + count - 1);
 
-  for (int i = 0; i < count; ++i)
+  for(int i = 0; i < count; ++i)
   {
     this->m_table.deleteColumn(column);
   }
 
   this->endRemoveColumns();
-  
   return true;
 }
 
 bool TSVTableModel::removeRows(int row, int count, const QModelIndex& parent)
 {
+  if(parent.isValid() || count <= 0 || row < 0 || row + count > this->rowCount())
+  {
+    return false;
+  }
+
   this->beginRemoveRows(parent, row, row + count - 1);
 
-  for (int i = 0; i < count; ++i)
+  for(int i = 0; i < count; ++i)
   {
     this->m_table.deleteRow(row);
   }
 
   this->endRemoveRows();
-  
   return true;
 }
 

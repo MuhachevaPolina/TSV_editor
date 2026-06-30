@@ -33,6 +33,8 @@ target_link_libraries(test_utils PUBLIC
 
 add_executable(tests
     test/Test_TSVTable.cpp
+    test/Test_TSVFilesHandler.cpp
+    test/Test_TSVTableModel.cpp
 )
 
 target_include_directories(tests PUBLIC
