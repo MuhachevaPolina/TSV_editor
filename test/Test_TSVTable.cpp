@@ -149,3 +149,47 @@ TEST(TSVTableTests, WrongIdxForAddColumn)
   EXPECT_EQ(table->getCellData(0, 4), "wrong idx");
   EXPECT_EQ(table->getHeaderData(4), "wrong idx");
 }
+
+TEST(TSVTableTests, GetCellDataNegativeIndex)
+{
+  TSVTable table(2, 2);
+
+  EXPECT_EQ(table.getCellData(-1, 0), "wrong idx");
+  EXPECT_EQ(table.getCellData(0, -1), "wrong idx");
+  EXPECT_EQ(table.getCellData(-1, -1), "wrong idx");
+}
+
+TEST(TSVTableTests, DeleteNegativeRow)
+{
+  TSVTable table(2, 2);
+
+  table.setCellData(0, 0, "first");
+  table.setCellData(1, 0, "second");
+
+  table.deleteRow(-1);
+
+  EXPECT_EQ(table.rowCount(), 2);
+  EXPECT_EQ(table.getCellData(0, 0), "first");
+  EXPECT_EQ(table.getCellData(1, 0), "second");
+}
+
+TEST(TSVTableTests, DeleteNegativeColumn)
+{
+  TSVTable table(2, 2);
+
+  table.setHeaderData(0, "first header");
+  table.setHeaderData(1, "second header");
+
+  table.setCellData(0, 0, "first");
+  table.setCellData(0, 1, "second");
+
+  table.deleteColumn(-1);
+
+  EXPECT_EQ(table.columnCount(), 2);
+
+  EXPECT_EQ(table.getHeaderData(0), "first header");
+  EXPECT_EQ(table.getHeaderData(1), "second header");
+
+  EXPECT_EQ(table.getCellData(0, 0), "first");
+  EXPECT_EQ(table.getCellData(0, 1), "second");
+}

@@ -27,14 +27,13 @@ TSVTable::TSVTable(int rowNum, int columnNum)
 
 std::string TSVTable::getCellData(int rowNum, int columnNum) const
 {
-  if(rowNum < this->rowCount() && columnNum < this->columnCount())
+  if(rowNum >= 0 && columnNum >= 0 &&
+     rowNum < this->rowCount() && columnNum < this->columnCount())
   {
     return this->m_tableData[rowNum][columnNum];
   }
-  else
-  {
-    return "wrong idx";
-  }
+
+  return "wrong idx";
 }
 
 std::vector<std::string> TSVTable::getRowData(int rowNum) const
@@ -56,7 +55,8 @@ std::vector<std::string> TSVTable::getColumnData(int columnNum) const
 
 void TSVTable::setCellData(int rowNum, int columnNum, std::string cellData)
 {
-  if (this->rowCount() > rowNum && this->columnCount() > columnNum)
+  if(rowNum >= 0 && columnNum >= 0 &&
+     rowNum < this->rowCount() && columnNum < this->columnCount())
   {
     this->m_tableData[rowNum][columnNum] = cellData;
   }
@@ -84,7 +84,7 @@ void TSVTable::setColumnData(int columnNum, std::vector<std::string> columnData)
 
 void TSVTable::deleteRow(int rowNum)
 {
-  if (rowNum < this->rowCount())
+  if(rowNum >= 0 && rowNum < this->rowCount())
   {
     this->m_tableData.erase(this->m_tableData.begin() + rowNum);
   }
@@ -92,12 +92,13 @@ void TSVTable::deleteRow(int rowNum)
 
 void TSVTable::deleteColumn(int columnNum)
 {
-  if (columnNum < this->columnCount())
+  if(columnNum >= 0 && columnNum < this->columnCount())
   {
-    for (int i = 0; i < this->rowCount(); ++i)
+    for(int i = 0; i < this->rowCount(); ++i)
     {
       this->m_tableData[i].erase(this->m_tableData[i].begin() + columnNum);
     }
+
     this->m_headers.erase(this->m_headers.begin() + columnNum);
   }
 }
@@ -158,14 +159,12 @@ void TSVTable::addColumn(std::string header, int columnNum)
 
 std::string TSVTable::getHeaderData(int columnNum) const
 {
-  if(columnNum < this->columnCount())
+  if(columnNum >= 0 && columnNum < this->columnCount())
   {
     return this->m_headers[columnNum];
   }
-  else
-  {
-    return "wrong idx";
-  }
+
+  return "wrong idx";
 }
 
 void TSVTable::debugOutput()
@@ -194,14 +193,10 @@ void TSVTable::debugOutput()
   }
 }
 
-void TSVTable::setHeaderData(int colunmNum, std::string headerData)
+void TSVTable::setHeaderData(int columnNum, std::string headerData)
 {
-  if(colunmNum < this->columnCount())
+  if(columnNum >= 0 && columnNum < this->columnCount())
   {
-    this->m_headers[colunmNum] = headerData;
-  }
-  else if(colunmNum == this->columnCount())
-  {
-    this->m_headers.push_back(std::string());
+    this->m_headers[columnNum] = headerData;
   }
 }
